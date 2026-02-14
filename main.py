@@ -1,6 +1,7 @@
 import pygame
 import sys
 from constants import *
+from board import Board
 pygame.init()
 
 # ======================================
@@ -12,11 +13,7 @@ pygame.display.set_caption("tic_tac_toe")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 60)
 
-board = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-]
+board = Board()
 
 current_player = PLAYER_1
 game_over = False
@@ -26,13 +23,7 @@ winner = None
 # Utility Functions
 # ======================================
 
-def print_board(board):
-    for row in board:
-        print(row)
-    print()
-
-
-def draw_grid():
+def draw_grid() -> None:
     pygame.draw.line(screen, WHITE, (SQUARE_SIZE, 0), (SQUARE_SIZE, HEIGHT), LINE_THICKNESS)
     pygame.draw.line(screen, WHITE, (2 * SQUARE_SIZE, 0), (2 * SQUARE_SIZE, HEIGHT), LINE_THICKNESS)
     pygame.draw.line(screen, WHITE, (0, SQUARE_SIZE), (WIDTH, SQUARE_SIZE), LINE_THICKNESS)
@@ -42,8 +33,8 @@ def draw_grid():
 def draw_pieces():
     for row in range(3):
         for col in range(3):
-
-            if board[row][col] == PLAYER_1:
+            cell = board.get_cell(row, col)
+            if cell == PLAYER_1:
                 pygame.draw.line(screen, BLUE,
                                  (col * SQUARE_SIZE + 40, row * SQUARE_SIZE + 40),
                                  (col * SQUARE_SIZE + SQUARE_SIZE - 40,
@@ -56,43 +47,12 @@ def draw_pieces():
                                   row * SQUARE_SIZE + 40),
                                  8)
 
-            elif board[row][col] == PLAYER_2:
+            elif cell == PLAYER_2:
                 pygame.draw.circle(screen, RED,
                                    (col * SQUARE_SIZE + SQUARE_SIZE // 2,
                                     row * SQUARE_SIZE + SQUARE_SIZE // 2),
                                    SQUARE_SIZE // 2 - 40,
                                    8)
-
-
-def check_winner(board):
-
-    # Rows
-    for row in range(3):
-        if board[row][0] == board[row][1] == board[row][2] and board[row][0] != EMPTY:
-            return board[row][0]
-
-    # Columns
-    for col in range(3):
-        if board[0][col] == board[1][col] == board[2][col] and board[0][col] != EMPTY:
-            return board[0][col]
-
-    # Diagonal TL -> BR
-    if board[0][0] == board[1][1] == board[2][2] and board[0][0] != EMPTY:
-        return board[0][0]
-
-    # Diagonal TR -> BL
-    if board[0][2] == board[1][1] == board[2][0] and board[0][2] != EMPTY:
-        return board[0][2]
-
-    return None
-
-
-def is_board_full(board):
-    for row in board:
-        for cell in row:
-            if cell == EMPTY:
-                return False
-    return True
 
 
 # ======================================
@@ -117,16 +77,13 @@ while running:
             row = mouse_y // SQUARE_SIZE
             col = mouse_x // SQUARE_SIZE
 
-            if board[row][col] == EMPTY:
-                board[row][col] = current_player
-                print_board(board)
-
-                winner = check_winner(board)
+            if board.place_move(row, col, current_player):
+                winner = board.check_winner()
 
                 if winner is not None:
                     print(f"Winner: Player {winner}")
                     game_over = True
-                elif is_board_full(board):
+                elif board.is_full():
                     print("Draw!")
                     game_over = True
                 else:
