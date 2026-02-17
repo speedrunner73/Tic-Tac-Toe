@@ -32,14 +32,15 @@ def draw_pieces(screen, board) -> None:
                                    SQUARE_SIZE // 2 - 40,
                                    8)
 
-def draw_restart_button(screen, font, winner, restart_button) -> None:
+def draw_postgame_overlay(screen, font, winner, buttons) -> None:
+
     if winner is not None:
         message = f"Player {winner} Wins!"
     else:
         message = "Draw!"
 
     text = font.render(message, True, WHITE)
-    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+    text_rect = text.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 60))
 
     padding = 20
     box_rect = text_rect.inflate(padding * 2, padding * 2)
@@ -48,11 +49,24 @@ def draw_restart_button(screen, font, winner, restart_button) -> None:
     pygame.draw.rect(screen, WHITE, box_rect, 3)
     screen.blit(text, text_rect)
 
-    restart_button.center = (WIDTH // 2, HEIGHT // 2 + 90)
+    for button in buttons:
+        button.draw(screen, font)
 
-    pygame.draw.rect(screen, BLACK, restart_button, border_radius=8)
-    pygame.draw.rect(screen, WHITE, restart_button, 2, border_radius=8)
 
-    restart_text = font.render("Restart", True, WHITE)
-    restart_text_rect = restart_text.get_rect(center=restart_button.center)
-    screen.blit(restart_text, restart_text_rect)
+
+def draw_menu(screen, title, subtitle, t_font,s_font, buttons):
+    screen.fill(BLACK)
+
+    # Title
+    title_surface = t_font.render(title, True, WHITE)
+    title_rect = title_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 140))
+    screen.blit(title_surface, title_rect)
+
+    # Subtitle
+    subtitle_surface = s_font.render(subtitle, True, WHITE)
+    subtitle_rect = subtitle_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2 - 80))
+    screen.blit(subtitle_surface, subtitle_rect)
+
+    # Buttons
+    for button in buttons:
+        button.draw(screen, s_font)
