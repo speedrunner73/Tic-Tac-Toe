@@ -1,5 +1,4 @@
 import pygame
-import sys
 from constants import WIDTH, HEIGHT, BLACK
 from game import Game
 
@@ -9,11 +8,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("tic_tac_toe")
 
 clock = pygame.time.Clock()
-
 game = Game()
 
 running = True
-
 while running:
     clock.tick(60)
 
@@ -23,6 +20,7 @@ while running:
         else:
             game.handle_event(event)
 
+    game.update()
     screen.fill(BLACK)
     game.render(screen)
 

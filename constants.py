@@ -20,5 +20,6 @@ PLAYER_2 = 1  # O (Red)
 class GameState(Enum):
     MODE_SELECT = 0
     DIFFICULTY_SELECT = 1
-    PLAYING = 2
-    GAME_OVER = 3
+    SYMBOL_SELECT = 2
+    PLAYING = 3
+    GAME_OVER = 4

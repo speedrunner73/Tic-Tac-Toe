@@ -105,3 +105,47 @@ class Board:
         for row in self._board:
             print(row)
         print()
+
+    # =======================================================
+    # clone() -> "Board"
+    #
+    # Function used to create a copy of the board that an AI
+    # can use to use its algorithms implemented to determine
+    # the most optimal move
+    # =======================================================
+    def clone(self) -> "Board":
+        new_board = Board()
+        for row in range(3):
+            for col in range(3):
+                new_board._board[row][col] = self._board[row][col]
+
+        return new_board
+
+    # =======================================================
+    # get_available_moves(self) -> list[tuple[int, int]]
+    #
+    # Function for AI to give it the list of spaces that the
+    # AI can work with instead of using what is already there
+    # and working over what is already done
+    # =======================================================
+    def get_available_moves(self) -> list[tuple[int, int]]:
+        moves = []
+        for row in range(3):
+            for col in range(3):
+                if self._board[row][col] == EMPTY:
+                    moves.append((row, col))
+
+        return moves
+
+    # =======================================================
+    # would_win() -> bool
+    #
+    # This function is still fair game because the AI needs
+    # to actually work and not just be dumb and place random
+    # X's or O's and actually check if it is a good idea to
+    # place it.
+    # =======================================================
+    def would_win(self, row: int, col: int, player: int) -> bool:
+        test_board = self.clone()
+        test_board.place_move(row, col, player)
+        return test_board.check_winner() == player
