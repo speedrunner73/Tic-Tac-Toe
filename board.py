@@ -1,5 +1,4 @@
 from constants import *
-from typing import Optional
 
 class Board:
     def __init__(self) -> None:
@@ -47,26 +46,39 @@ class Board:
     #   3. Top Left to Bottom Right
     #   4. Bottom Left to Top Right
     # =======================================================
-    def check_winner(self) -> Optional[int]:
-        # Case 1: Rows
+    def check_winner(self):
+
+        # Rows
         for row in range(3):
-            if self._board[row][0] == self._board[row][1] == self._board[row][2] and self._board[row][0] != EMPTY:
-                return self._board[row][0]
+            if (
+                    self._board[row][0] != EMPTY and
+                    self._board[row][0] == self._board[row][1] == self._board[row][2]
+            ):
+                return self._board[row][0], ("row", row)
 
-        # Case 2: Columns
+        # Columns
         for col in range(3):
-            if self._board[0][col] == self._board[1][col] == self._board[2][col] and self._board[0][col] != EMPTY:
-                return self._board[0][col]
+            if (
+                    self._board[0][col] != EMPTY and
+                    self._board[0][col] == self._board[1][col] == self._board[2][col]
+            ):
+                return self._board[0][col], ("col", col)
 
-        # Case 3: Diagonal TL -> BR
-        if self._board[0][0] == self._board[1][1] == self._board[2][2] and self._board[0][0] != EMPTY:
-            return self._board[0][0]
+        # Main diagonal
+        if (
+                self._board[0][0] != EMPTY and
+                self._board[0][0] == self._board[1][1] == self._board[2][2]
+        ):
+            return self._board[0][0], ("diag", 0)
 
-        # Case 4: Diagonal TR -> BL
-        if self._board[0][2] == self._board[1][1] == self._board[2][0] and self._board[0][2] != EMPTY:
-            return self._board[0][2]
+        # Anti diagonal
+        if (
+                self._board[0][2] != EMPTY and
+                self._board[0][2] == self._board[1][1] == self._board[2][0]
+        ):
+            return self._board[0][2], ("diag", 1)
 
-        return None
+        return None, None
 
     # =======================================================
     # is_full(self)

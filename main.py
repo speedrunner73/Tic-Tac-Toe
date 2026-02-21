@@ -1,27 +1,47 @@
 import pygame
-from constants import WIDTH, HEIGHT, BLACK
+from constants import *
 from game import Game
 
-pygame.init()
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("tic_tac_toe")
+def main() -> None:
 
-clock = pygame.time.Clock()
-game = Game()
+    pygame.init()
 
-running = True
-while running:
-    clock.tick(60)
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Tic Tac Toe")
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        else:
-            game.handle_event(event)
+    clock = pygame.time.Clock()
+    game = Game()
 
-    game.update()
-    screen.fill(BLACK)
-    game.render(screen)
+    running = True
 
-    pygame.display.update()
+    while running:
+        clock.tick(60)
+
+        # -------------------------
+        # Event Loop
+        # -------------------------
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            else:
+                game.handle_event(event)
+
+        # -------------------------
+        # Update Logic
+        # -------------------------
+        game.update()
+
+        # -------------------------
+        # Render
+        # -------------------------
+        screen.fill(BACKGROUND)
+        game.render(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
