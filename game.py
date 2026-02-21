@@ -224,7 +224,7 @@ class Game:
 
                 self.winner, self.win_line = self.board.check_winner()
 
-                if self.winner or self.board.is_full():
+                if self.winner is not None or self.board.is_full():
                     self.win_animation_progress = 0
                     self._enter_game_over()
                 else:

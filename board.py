@@ -125,12 +125,9 @@ class Board:
     # can use to use its algorithms implemented to determine
     # the most optimal move
     # =======================================================
-    def clone(self) -> "Board":
+    def clone(self):
         new_board = Board()
-        for row in range(3):
-            for col in range(3):
-                new_board._board[row][col] = self._board[row][col]
-
+        new_board._board = [row[:] for row in self._board]
         return new_board
 
     # =======================================================
@@ -158,6 +155,11 @@ class Board:
     # place it.
     # =======================================================
     def would_win(self, row: int, col: int, player: int) -> bool:
+        if self.get_cell(row, col) != EMPTY:
+            return False
+
         test_board = self.clone()
         test_board.place_move(row, col, player)
-        return test_board.check_winner() == player
+
+        winner, _ = test_board.check_winner()
+        return winner == player
