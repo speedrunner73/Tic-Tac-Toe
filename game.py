@@ -119,7 +119,13 @@ class Game:
         elif self.state == GameState.GAME_OVER:
             for button in self.menu_buttons:
                 if button.is_clicked(event.pos):
+
                     if button.label == "Restart":
+                        # Stay in same mode, just reset match
+                        self._restart_match()
+
+                    elif button.label == "Exit":
+                        # Go back to main menu
                         self._enter_mode_select()
 
     # --------------------------------------------------
@@ -241,6 +247,22 @@ class Game:
         ):
             if self.win_animation_progress < 1:
                 self.win_animation_progress += 0.05
+
+    # --------------------------------------------------
+    # Restart Match
+    # --------------------------------------------------
+    def _restart_match(self):
+        self.board.reset()
+        self.winner = None
+        self.win_line = None
+        self.menu_buttons = []
+        self.ai_move_start_time = None
+
+        # Randomize who starts again
+        self.current_player = random.choice([PLAYER_1, PLAYER_2])
+
+        self.state = GameState.PLAYING
+
 
     # --------------------------------------------------
     # Button Layout Helpers
@@ -389,12 +411,17 @@ class Game:
         self.state = GameState.PLAYING
 
     def _enter_game_over(self):
-        button_width = 240
-        button_height = 60
+        self.menu_buttons = self._create_horizontal_buttons(
+            ["Restart", "Exit"]
+        )
 
-        x = (WIDTH - button_width) // 2
-        y = HEIGHT // 2 + 60
+        # Push buttons lower
+        for button in self.menu_buttons:
+            button.rect.y += 40  # move down 40px
 
-        rect = pygame.Rect(x, y, button_width, button_height)
-        self.menu_buttons = [Button(rect, "Restart")]
+        # Increase spacing manually
+        if len(self.menu_buttons) == 2:
+            self.menu_buttons[0].rect.x -= 30
+            self.menu_buttons[1].rect.x += 30
+
         self.state = GameState.GAME_OVER
